@@ -13,13 +13,13 @@ function generateItemElement(item, itemIndex, template){
       <span class="shopping-item js-shopping-item ${item.checked ? "shopping-item__checked" : ''}">${item.name}</span>
       <div class="shopping-item-controls">
         <button class="shopping-item-toggle js-item-toggle">
-            <span class="button-label">check</span>
+            <span class="button-label">Check</span>
         </button>
         <button class="shopping-item-delete js-item-delete">
-            <span class="button-label">delete</span>
+            <span class="button-label">Delete</span>
         </button>
         <button class="shopping-item-edit js-item-edit">
-            <span class="button-label">edit</span>
+            <span class="button-label">Edit</span>
         </button>
       </div>
     </li>`;
@@ -30,6 +30,7 @@ function generateEditItemElement(itemValue){
     <form id="js-shopping-list-form">
       <label for="shopping-list-entry">Edit this item</label>
       <input type="text" value = ${itemValue} name="shopping-list-entry" class="js-shopping-list-entry" placeholder="${itemValue}">
+      <button type="submit" class = shopping-item-save js-item-save">Save item</button>
     </form>`
 }
 
@@ -43,23 +44,23 @@ function generateOriginalForm(){
 }
 
 
-function generateSaveItemElement(item, itemIndex, template){
-      return `
-      <li class="js-item-index-element" data-item-index="${itemIndex}">
-      <span class="shopping-item js-shopping-item ${item.checked ? "shopping-item__checked" : ''}">${item.name}</span>
-      <div class="shopping-item-controls">
-        <button class="shopping-item-toggle js-item-toggle">
-            <span class="button-label">check</span>
-        </button>
-        <button class="shopping-item-delete js-item-delete">
-            <span class="button-label">delete</span>
-        </button>
-        <button class="shopping-item-save js-item-save">
-            <span class="button-label">save</span>
-        </button>
-      </div>
-    </li>`;
-}
+// function generateSaveItemElement(item, itemIndex, template){
+//       return `
+//       <li class="js-item-index-element" data-item-index="${itemIndex}">
+//       <span class="shopping-item js-shopping-item ${item.checked ? "shopping-item__checked" : ''}">${item.name}</span>
+//       <div class="shopping-item-controls">
+//         <button class="shopping-item-toggle js-item-toggle">
+//             <span class="button-label">Check</span>
+//         </button>
+//         <button class="shopping-item-delete js-item-delete">
+//             <span class="button-label">Delete</span>
+//         </button>
+//         <button class="shopping-item-save js-item-save">
+//             <span class="button-label">Save</span>
+//         </button>
+//       </div>
+//     </li>`;
+// }
 
 
 function generateShoppingItemString(shoppingList){
@@ -76,13 +77,13 @@ function renderShoppingList(){
   $('.js-shopping-list').html(shoppingListItemString);
 };
 
-function renderEditedShoppingList(shoppingList){
-  console.log('`renderShoppingList` ran');
-  const items = shoppingList.map((item, index) => generateSaveItemElement(item, index));
-  const itemsEdited = items.join("");
+// function renderEditedShoppingList(shoppingList){
+//   console.log('`renderShoppingList` ran');
+//   const items = shoppingList.map((item, index) => generateSaveItemElement(item, index));
+//   const itemsEdited = items.join("");
 
-  $('.js-shopping-list').html(itemsEdited);
-};
+//   $('.js-shopping-list').html(itemsEdited);
+// };
 
 function addNewItem(newItem){
   //add new item to the array
@@ -138,25 +139,49 @@ function handleEditItem(itemIndex, newItem){
     
     const newValue = $('.js-shopping-list-entry').val();
 
-    $('.js-shopping-list').html(generateSaveItemElement(showSelectedStoreValue(valueIndex)));
-    renderEditedShoppingList(STORE);
+    // $('.js-shopping-list').html(generateSaveItemElement(showSelectedStoreValue(valueIndex)));
+    renderShoppingList();
   })
 };
 
-function handleSaveEditedItem(itemIndex, newItem){
-  // 1. allows to edit item from STORE
-  $('.shopping-list').on('click', '.shopping-item-save', function(e){
+// function handleSaveEditedItem(itemIndex, newItem){
+//   // 1. allows to edit item from STORE
+//   $('.shopping-list').on('click', '.shopping-item-save', function(e){
+//     e.preventDefault();
+//     const valueIndex = $(e.target).closest('li').index();
+//     const value = $(e.target).closest('li').val();
+//     const newValue = $('.js-shopping-list-entry').val();
+
+//     saveEditedItem(valueIndex, newValue);
+//     renderShoppingList();
+//     $('#js-shopping-list-form').html(generateOriginalForm());
+//     renderShoppingList();
+//   })
+// };
+
+
+function handleSaveItemSubmit(){
+    $('.shopping-list').on('click', '.shopping-item-save', function(e){
     e.preventDefault();
+
     const valueIndex = $(e.target).closest('li').index();
     const value = $(e.target).closest('li').val();
     const newValue = $('.js-shopping-list-entry').val();
 
     saveEditedItem(valueIndex, newValue);
-    renderEditedShoppingList(STORE);
     $('#js-shopping-list-form').html(generateOriginalForm());
     renderShoppingList();
   })
-};
+
+  //   // const value = $('.js-shopping-list-entry').val();
+  //   addNewItem(value);
+  //   $('.js-shopping-list-entry').val('');
+  //   renderShoppingList();
+  // })
+
+    console.log('`handleNewItemSubmit` ran');
+}
+
 
 
 function handleNewItemSubmit(){
@@ -178,7 +203,7 @@ function handleShoppingList(){
   handleItemCheckClicked();
   handleDeleteItemClicked();
   handleEditItem();
-  handleSaveEditedItem();
+  handleSaveItemSubmit();
 }
 
 $(handleShoppingList);
